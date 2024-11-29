@@ -1,0 +1,41 @@
+<div class="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white py-2 d-none" id="error-box-from-js">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <p class="font-medium" id="error-message-from-js"></p>
+    </div>
+  </div>
+</div>
+
+<% if alert.present? %>
+  <div class="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <p class="font-medium"><%= alert %></p>
+      </div>
+    </div>
+  </div>
+<% elsif flash[:alert].present? %>
+  <div class="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <p class="font-medium"><%= flash[:alert] %></p>
+      </div>
+    </div>
+  </div>
+<% elsif flash[:notice].present? %>
+  <div class="fixed top-0 left-0 right-0 z-50 bg-green-600 text-white py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <p class="font-medium"><%= flash[:notice] %></p>
+      </div>
+    </div>
+  </div>
+<% elsif flash.any? %>
+  <div class="fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <p class="font-medium"><%= flash.values.first %></p>
+      </div>
+    </div>
+  </div>
+<% end %>

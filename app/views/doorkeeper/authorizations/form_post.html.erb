@@ -1,0 +1,15 @@
+<header class="border-b border-gray-300 dark:border-gray-700 mb-4 pb-2">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= t('.title') %></h1>
+</header>
+
+<%= form_tag @pre_auth.redirect_uri, method: :post, name: :redirect_form, authenticity_token: false, class: "hidden" do %>
+  <% authorization_params.each do |key, value| %>
+    <%= hidden_field_tag key, value %>
+  <% end %>
+<% end %>
+
+<script>
+  window.onload = function () {
+    document.forms['redirect_form'].submit();
+  };
+</script>

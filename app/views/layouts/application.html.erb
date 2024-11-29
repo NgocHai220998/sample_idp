@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MapduDev</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="/index.css">
+    <script src="/tailwind-3.4.5.js"></script>
+    <script src="/js-cookies-3.0.5.js"></script>
+    <%= javascript_pack_tag 'webauth.js' %>
+  </head>
+
+  <body>
+    <%= render 'shared/alert' %>
+    <%= yield %>
+  </body>
+
+</html>

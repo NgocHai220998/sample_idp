@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sample_id
+    ports:
+      - "9999:9999"
+    env_file:
+      - .env.docker.local
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./log:/rails/log
+      - ./tmp:/rails/tmp
+      - ./storage:/rails/storage
+    networks:
+      - app_network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: sample_id_production
+      MYSQL_USER: sample_id
+      MYSQL_PASSWORD: password
+    ports:
+      - "3308:3306" # Change the port to avoid conflict with local MySQL
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/application-init.sql:/docker-entrypoint-initdb.d/application-init.sql
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --init-file /docker-entrypoint-initdb.d/application-init.sql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:

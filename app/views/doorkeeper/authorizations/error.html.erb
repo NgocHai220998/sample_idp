@@ -1,0 +1,18 @@
+<section class="min-h-screen relative z-10">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-3xl">
+      <main role="main" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+        <div class="text-sm text-red-600 bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
+          <% error_messages = (local_assigns[:error_response] ? error_response : @pre_auth.error_response).body[:error_description] %>
+          <% error_messages.split("\n").each do |message| %>
+            <p><%= message %></p>
+          <% end %>
+        </div>
+        <div class="mt-4 flex justify-center">
+          <%= link_to t('doorkeeper.authorizations.buttons.back_home'), root_path, class: 'hover:no-underline inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500' %>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+<%= render 'shared/star_background' %>

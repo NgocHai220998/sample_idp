@@ -1,0 +1,3 @@
+<%= form_tag service_provider_path(service_provider), method: :delete do %>
+  <%= submit_tag 'Delete', onclick: "return confirm('#{t('.confirm_destroy')}')", class: submit_btn_css || 'btn btn-link' %>
+<% end %>

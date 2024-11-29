@@ -1,0 +1,96 @@
+<section class="min-h-screen flex justify-center items-center relative z-10 px-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+      <div>
+        <h1 class="text--glitch text-white" data-text="@SampleID">@SampleID</h1>
+        <span class="text-sm text-gray-400"><%= link_to '@Mapdu', 'https://www.facebook.com/NguyenNgocHaiNewVersion/', class: "text-sm font-medium text-gray-400 hover:underline hover:text-gray-200", target: "_blank" %> - © 2024 Tokyo, Capital of Japan</span>
+        <% if current_user %>
+          <% if current_user&.admin? %>
+            <p><%= link_to 'Go to Admin page.', oauth_applications_path, class: "text-sm font-medium text-gray-400 hover:underline hover:text-gray-200" %></p>
+          <% else %>
+            <%= button_to admins_path, method: :post, class: "inline-flex items-center space-x-2 px-0 py-1 text-gray-400 hover:text-gray-200 focus:outline-none text-sm" do %>
+              <span>Change to Admin Role</span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+      <% if user_signed_in? %>
+        <div>
+          <%= button_to destroy_user_session_path, method: :delete, class: "mt-4 md:mt-0 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg h-10 text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-600 dark:focus:ring-red-800" do %>
+            Hi! <%= current_user.display_name %>, Logout
+            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 16 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 13l3.5-3.5m0 0L6 6m3.5 3.5H1M9 1h6v14H9"/>
+            </svg>
+            <i id="signal-data" data-displayname="<%= current_user.display_name %>" data-userid="<%= current_user.webauthn_id&.webauthn_id %>"></i>
+
+            <script>
+              const signalDataElement = document.getElementById("signal-data");
+              const displayName = signalDataElement.dataset.displayname;
+              const userId = signalDataElement.dataset.userid;
+
+              if (typeof PublicKeyCredential !== 'undefined' && 'signalCurrentUserDetails' in PublicKeyCredential && userId) {
+                PublicKeyCredential.signalCurrentUserDetails({
+                  userId,
+                  displayName,
+                  name: displayName,
+                  rpId: window.location.hostname,
+                });
+              }
+            </script>
+          <% end %>
+          <p class="text-right"><%= link_to 'Managing Passkeys', user_webauthn_credentials_path, class: "text-sm font-medium text-gray-300 hover:underline hover:text-gray-200" %></p>
+        </div>
+      <% else %>
+        <%= link_to new_user_session_path(authorization_params), class: "mt-4 md:mt-0 text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg h-10 text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800" do %>
+          Try with SampleID
+          <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9" />
+          </svg>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="text-gray-200 max-w-4xl mx-auto mt-4">
+      <div class="space-y-4">
+        <p class="leading-relaxed">
+          Hi, I’m <strong class="text-teal-400">Mapdu</strong>, a Ruby developer interested in Identity (ID) field and eager to deepen my knowledge.
+        </p>
+        <p class="leading-relaxed">
+          This is a sample <strong class="text-teal-400">Identity Provider</strong> (IdP) application I created and apply the technologies what I’ve learned. It also serves as a platform to experiment with new identity-related technologies.
+        </p>
+        <p class="leading-relaxed">
+          The IdP supports <span class="font-semibold text-teal-400">OAuth 2.0</span>, <span class="font-semibold text-teal-400">OpenID Connect</span>, and <span class="font-semibold text-teal-400">SAML</span> protocols, as well as <span class="font-semibold text-teal-400">Passkey authentication</span> for enhanced security. Feel free to explore and enjoy with my Sample IdP project!
+        </p>
+      </div>
+      <div class="mt-6">
+        <h3 class="text-2xl font-bold text-teal-400 mb-2">Technologies used:</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li><span class="font-semibold text-teal-400">Backend:</span> Ruby on Rails</li>
+          <li><span class="font-semibold text-teal-400">Frontend:</span> Webpack, HTML, CSS, and JavaScript</li>
+          <li><span class="font-semibold text-teal-400">Database:</span> MySQL</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <div class="flex flex-wrap gap-2">
+        <!-- GitHub Button -->
+        <a href="https://github.com/NgocHai220998/sample_idp.git"
+          class="flex items-center justify-center px-3 py-1 text-white bg-gray-800 rounded-md shadow hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 text-sm"
+          target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-6 mr-2" viewBox="0 0 24 24">
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.111.82-.261.82-.577v-2.237c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.838 1.241 1.838 1.241 1.07 1.834 2.809 1.304 3.495.997.108-.776.418-1.304.762-1.603-2.665-.304-5.466-1.334-5.466-5.93 0-1.309.468-2.381 1.236-3.221-.124-.303-.536-1.524.116-3.176 0 0 1.009-.322 3.301 1.23.957-.266 1.984-.399 3.003-.405 1.018.006 2.045.139 3.003.405 2.291-1.553 3.299-1.23 3.299-1.23.653 1.653.241 2.873.118 3.176.77.84 1.235 1.912 1.235 3.221 0 4.609-2.803 5.625-5.475 5.922.43.371.823 1.102.823 2.222v3.293c0 .318.218.694.825.576 4.765-1.585 8.2-6.082 8.2-11.385 0-6.627-5.373-12-12-12z" />
+          </svg>
+          Source Code
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= render 'shared/star_background' %>

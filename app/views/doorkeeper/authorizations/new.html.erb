@@ -1,0 +1,45 @@
+<section class="min-h-screen relative z-10">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
+      <main role="main" class="space-y-6">
+        <%= link_to root_path, class: "flex items-center justify-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" do %>
+          <strong class="text--glitch pl-1">@SampleID</strong>
+        <% end %>
+        <p class="flex items-center justify-center leading-tight tracking-tight text-gray-700 dark:text-white">
+          Authorization
+        </p>
+        <p class="flex items-center justify-center text-lg text-gray-800 dark:text-gray-200 gap-1">
+          <%= raw t('.prompt', client_name: content_tag(:strong, class: 'text-indigo-600 dark:text-indigo-400') { @pre_auth.client&.name }) %>
+        </p>
+
+        <% if @pre_auth.scopes.count > 0 %>
+          <div id="oauth-permissions" class="space-y-2">
+            <p class="text-lg text-gray-800 dark:text-gray-200"><%= t('.able_to') %>:</p>
+            <ul class="list-disc pl-5 text-indigo-600 dark:text-indigo-400">
+              <% @pre_auth.scopes.each do |scope| %>
+                <li><%= t scope, scope: [:doorkeeper, :scopes] %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="flex flex-row space-x-4">
+          <%= form_tag oauth_authorization_path, method: :delete, class: 'space-y-1 w-1/2' do %>
+            <% authorization_params.each do |key, value| %>
+              <%= hidden_field_tag key, value %>
+            <% end %>
+            <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "cursor-pointer w-full py-2 px-2 bg-red-600 text-white text-lg rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+          <% end %>
+
+          <%= form_tag oauth_authorization_path, method: :post, class: 'space-y-1 w-1/2' do %>
+            <% authorization_params.each do |key, value| %>
+              <%= hidden_field_tag key, value %>
+            <% end %>
+            <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "cursor-pointer w-full py-2 px-4 bg-green-600 text-white text-lg rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+          <% end %>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+<%= render 'shared/star_background' %>

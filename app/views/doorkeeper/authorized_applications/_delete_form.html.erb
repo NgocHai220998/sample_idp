@@ -1,0 +1,4 @@
+<% submit_btn_css ||= 'text-indigo-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+<%= form_tag oauth_authorized_application_path(application), method: :delete do %>
+  <%= submit_tag t('doorkeeper.authorized_applications.buttons.revoke'), onclick: "return confirm('#{ t('doorkeeper.authorized_applications.confirmations.revoke') }')", class: "inline-block font-medium #{submit_btn_css}" %>
+<% end %>

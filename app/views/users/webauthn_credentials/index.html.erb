@@ -1,0 +1,91 @@
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 relative z-10">
+  <div class="w-full bg-white rounded-lg shadow-lg dark:border sm:max-w-md md:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+    <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+      <!-- Back Button -->
+      <%= link_to root_path, class: "inline-flex items-center space-x-2 px-0 py-1 text-gray-500 hover:text-gray-700 focus:outline-none text-sm" do %>
+        <svg class="rotate-180 w-4 h-4 ms-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12l3.5-3.5m0 0L6 6m3.5 3.5H2M9 2h5v12H9"/>
+        </svg>
+        <span>Back</span>
+      <% end %>
+      
+      <!-- Passkeys List -->
+      <% if @webauthn_credentials.present? %>
+        <ul class="space-y-4">
+          <% @webauthn_credentials.each do |webauthn| %>
+            <li class="flex justify-between items-center p-3 bg-gray-100 rounded-lg shadow-sm dark:bg-gray-700">
+              <!-- Passkey Details -->
+              <div>
+                <p class="text-xl text-gray-600 dark:text-gray-400 font-bold">
+                  <%= webauthn.registered_browser %> | <%= webauthn.registered_os %>
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">
+                  Registered At: <%= webauthn.created_at.strftime("%B %d, %Y") %>
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">
+                  Last Used: <%= webauthn.last_used_at&.strftime("%B %d, %Y") || "Never Used" %>
+                </p>
+              </div>
+              <!-- Delete Button -->
+              <%= button_to user_webauthn_credential_path(webauthn.id), method: :delete, class: "text-red-500 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 rounded-lg p-2 transition" do %>
+                Unregister
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+          You don’t have any passkeys yet.
+        </p>
+      <% end %>
+
+      <div class="flex justify-center mt-6">
+        <button id="register-passkey-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">
+          Register New Passkey
+        </button>
+      </div>
+
+      <div id="signal-data" data-credentials="<%= @webauthn_credentials.pluck(:external_id) %>" data-userid="<%= current_user&.webauthn_id&.webauthn_id %>"></div>
+    </div>
+  </div>
+</div>
+
+<%= render 'shared/star_background' %>
+<script name="Resgister Passkey">
+  document.addEventListener("DOMContentLoaded", () => {
+    const registerBtn = document.querySelector("#register-passkey-btn");
+
+    registerBtn.addEventListener("click", async (event) => {
+      try {
+        const options = await WebauthnObject.getOptions();
+        const credential = await WebauthnObject.webauthn.create(
+          WebauthnObject.webauthn.parseCreationOptionsFromJSON(options)
+        );
+
+        const credentialData = {
+          ...credential.toJSON(),
+        };
+        await WebauthnObject.sentRegistrationData(credentialData);
+      } catch (error) {
+        const errorBox = document.querySelector("#error-box-from-js");
+        const errorMessageElement = document.querySelector("#error-message-from-js");
+        errorBox.classList.remove("d-none");
+        errorMessageElement.textContent = error.message;
+      }
+    });
+  });
+</script>
+
+<script name="Call SignalAllAcceptedCredentials API">
+  const signalDataElement = document.getElementById("signal-data");
+  const allAcceptedCredentialIds = JSON.parse(signalDataElement.dataset.credentials);
+  const userId = signalDataElement.dataset.userid;
+
+  if (typeof PublicKeyCredential !== 'undefined' && 'signalAllAcceptedCredentials' in PublicKeyCredential) {
+    PublicKeyCredential.signalAllAcceptedCredentials({
+      userId,
+      allAcceptedCredentialIds,
+      rpId: window.location.hostname,
+    });
+  }
+</script>

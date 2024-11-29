@@ -1,0 +1,72 @@
+<%= form_for application, url: doorkeeper_submit_path(application), as: :doorkeeper_application, html: { role: 'form', class: 'space-y-6' } do |f| %>
+  <% if application.errors.any? %>
+    <div class="bg-red-600 text-white py-2 px-4 rounded mb-4" data-alert>
+      <p><%= t('doorkeeper.applications.form.error') %></p>
+    </div>
+  <% end %>
+
+  <div class="space-y-4">
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :name, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_field :name, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{ 'border-red-600' if application.errors[:name].present? }", required: true, placeholder: "Mapdu Dev" %>
+        <%= doorkeeper_errors_for application, :name %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :redirect_uri, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_area :redirect_uri, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{ 'border-red-600' if application.errors[:redirect_uri].present? }", placeholder: "https://mapdu.dev/oauth/callback", required: true %>
+        <%= doorkeeper_errors_for application, :redirect_uri %>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          <%= t('doorkeeper.applications.help.redirect_uri') %>
+        </span>
+
+        <% if Doorkeeper.configuration.allow_blank_redirect_uri?(application) %>
+          <span class="text-sm text-gray-500 dark:text-gray-400">
+            <%= t('doorkeeper.applications.help.blank_redirect_uri') %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :confidential, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full flex">
+        <%= f.check_box :confidential, class: "h-4 w-4 text-indigo-600 border-gray-300 rounded #{ 'border-red-600' if application.errors[:confidential].present? }", style: "margin-top: 2px" %>
+        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+          <%= t('doorkeeper.applications.help.confidential') %>
+        </span>
+        <%= doorkeeper_errors_for application, :confidential %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :skip_authorization, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full flex">
+        <%= f.check_box :skip_authorization, class: "h-4 w-4 text-indigo-600 border-gray-300 rounded #{ 'border-red-600' if application.errors[:skip_authorization].present? }", style: "margin-top: 2px" %>
+        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+          <%= t('doorkeeper.applications.help.skip_authorization') %>
+        </span>
+        <%= doorkeeper_errors_for application, :skip_authorization %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :scopes, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_field :scopes, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{ 'border-red-600' if application.errors[:scopes].present? }", required: true, placeholder: "openid email profile" %>
+        <%= doorkeeper_errors_for application, :scopes %>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          <%= t('doorkeeper.applications.help.scopes') %>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-4">
+      <%= f.submit t('doorkeeper.applications.buttons.submit'), class: 'cursor-pointer text-white inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700' %>
+      <%= link_to t('doorkeeper.applications.buttons.cancel'), oauth_applications_path, class: 'hover:no-underline inline-flex text-white items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-red-600 hover:bg-red-400' %>
+    </div>
+  </div>
+<% end %>

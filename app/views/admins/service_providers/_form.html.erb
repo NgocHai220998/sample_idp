@@ -1,0 +1,42 @@
+<%= form_for @service_provider, html: { role: 'form', class: 'space-y-6' } do |f| %>
+  <% if @service_provider.errors.any? %>
+    <div class="bg-red-600 text-white py-2 px-4 rounded mb-4" data-alert>
+      <p><%= t('.error') %></p>
+    </div>
+  <% end %>
+
+  <div class="space-y-4">
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :name, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_field :name, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{'border-red-600' if @service_provider.errors[:name].present?}", required: true %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :metadata_url, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_field :metadata_url, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{'border-red-600' if @service_provider.errors[:metadata_url].present?}", required: true %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :response_hosts, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_area :response_hosts, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{'border-red-600' if @service_provider.errors[:response_hosts].present?}", required: true %>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row">
+      <%= f.label :fingerprint, class: 'sm:w-1/4 font-bold text-gray-900 dark:text-white mb-2 sm:mb-0' %>
+      <div class="sm:w-3/4 w-full">
+        <%= f.text_field :fingerprint, class: "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{'border-red-600' if @service_provider.errors[:fingerprint].present?}" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-4">
+      <%= f.submit 'Submit', class: 'cursor-pointer text-white inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700' %>
+      <%= link_to 'Cancel', service_providers_path, class: 'hover:no-underline inline-flex text-white items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-red-600 hover:bg-red-400' %>
+    </div>
+  </div>
+<% end %>
