@@ -4,6 +4,7 @@ Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (requires ORM extensions installed).
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
   orm :active_record
+  application_class 'OauthApplication'
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do

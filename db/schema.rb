@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_23_133925) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_29_125852) do
   create_table "oauth_access_grants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -72,6 +72,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_23_133925) do
     t.string "fingerprint"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_oauth_applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "oauth_application_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oauth_application_id"], name: "index_user_oauth_applications_on_oauth_application_id"
+    t.index ["user_id", "oauth_application_id"], name: "idx_on_user_id_oauth_application_id_1f26d6ff08", unique: true
+    t.index ["user_id"], name: "index_user_oauth_applications_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

@@ -2,7 +2,6 @@
 
 module Admins
   class OauthApplicationsController < Doorkeeper::ApplicationsController
-    before_action :set_application, except: %i[new index create] # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :ensure_application_owner, only: %i[show edit update destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
     # NOTE: those actions are used implicitly.
@@ -11,8 +10,7 @@ module Admins
     # def edit; super; end
 
     def index
-      @applications = OauthApplication.all
-      @applications = @applications.where(owner: current_user)
+      @applications = OauthApplication.where(owner: current_user)
     end
 
     def create
@@ -33,10 +31,6 @@ module Admins
 
     private
 
-    def set_application
-      @application = OauthApplication.find(params[:id])
-    end
-
     def ensure_application_owner
       return if @application.owner == current_user
 
@@ -44,7 +38,7 @@ module Admins
     end
 
     def application_params
-      params.require(:doorkeeper_application).permit(
+      params.require(:oauth_application).permit(
         :name,
         :redirect_uri,
         :skip_authorization,

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   use_doorkeeper_openid_connect
   use_doorkeeper do
     controllers applications: 'admins/oauth_applications'
+    controllers authorizations: 'users/authorizations'
   end
   resources :service_providers, controller: 'admins/service_providers' # TODO: Need to refactor this later
   devise_for :users, controllers: { sessions: 'no_auth/sessions', registrations: 'no_auth/registrations' }
