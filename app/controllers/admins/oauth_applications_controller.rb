@@ -43,7 +43,8 @@ module Admins
         :redirect_uri,
         :skip_authorization,
         :confidential,
-        :scopes
+        :scopes,
+        :backchannel_logout_uri
       )
     end
   end

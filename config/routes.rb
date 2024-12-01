@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
   root 'top#index'
-  use_doorkeeper_openid_connect
+  use_doorkeeper_openid_connect do
+    controllers discovery: 'well_known/doorkeeper_discovery'
+  end
   use_doorkeeper do
     controllers applications: 'admins/oauth_applications'
     controllers authorizations: 'users/authorizations'

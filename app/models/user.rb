@@ -17,6 +17,8 @@ class User < ApplicationRecord
   validates :uuid, presence: true, uniqueness: true
   validates :email, presence: true, email_format: true
 
+  alias_attribute :sub, :uuid
+
   def display_name
     return name if name.present?
 
