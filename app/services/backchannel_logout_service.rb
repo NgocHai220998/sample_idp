@@ -23,11 +23,11 @@ class BackchannelLogoutService
   end
 
   def self.send_logout_request(user, application)
-    token = generate_jwt_token(application.backchannel_logout_uri)
-    headers = { 'Authorization' => "Bearer #{token}" }
+    token = generate_jwt_token(user.sub, application.uid)
+    headers = { 'user_agent' => 'Sample ID' }
 
     begin
-      response = post_request(application.backchannel_logout_uri, { user_id: user.sub }, headers)
+      response = post_request(application.backchannel_logout_uri, { logout_token: token }, headers)
       Rails.logger.info("Backchannel logout successful for application #{application.id}: #{response}")
     rescue StandardError => e
       Rails.logger.error("Failed to send backchannel logout for application #{application.id}: #{e.message}")

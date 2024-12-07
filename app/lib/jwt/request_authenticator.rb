@@ -2,19 +2,22 @@
 
 module Jwt
   module RequestAuthenticator
-    def generate_jwt_token(url)
+    def generate_jwt_token(sub, aud)
       der_binary = Base64.strict_decode64(ENV.fetch('JWT_SIGNING_KEY'))
       rsa = OpenSSL::PKey::RSA.new der_binary
       payload = {
         iss: ENV.fetch('OPENID_CONNECT_ISSUER'),
-        aud: url,
-        exp: 30.minutes.from_now.to_i,
-        sub: ENV.fetch('OPENID_CONNECT_ISSUER'),
-        iat: Time.current.to_i
+        aud:,
+        exp: 10.minutes.from_now.to_i,
+        sub:,
+        iat: Time.current.to_i,
+        events: {
+          'http://schemas.openid.net/event/backchannel-logout': {}
+        }
       }
 
       headers = {
-        alg: 'RS256',
+        alg: Doorkeeper::OpenidConnect.signing_algorithm,
         kid: JSON::JWK.new(rsa.public_key)[:kid]
       }
 
